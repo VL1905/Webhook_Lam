@@ -7,12 +7,16 @@ app = Flask(__name__)
 TOKEN = "7810118093:AAGusdSvdjd4fNbTrB5BUK-GXkY1bdJFMEQ"
 CHAT_ID = "5900286005"
 
-@app.route("/", methods=["POST"])
+@app.route("/", methods=["GET", "POST"])  # Hỗ trợ cả GET và POST
 def webhook():
-    data = request.json
-    message = data.get("message", "Không có nội dung")
-    send_telegram_message(message)
-    return {"status": "ok"}
+    if request.method == "GET":
+        return "Webhook is running!"
+    
+    if request.method == "POST":
+        data = request.json
+        message = data.get("message", "Không có nội dung")
+        send_telegram_message(message)
+        return {"status": "ok"}
 
 def send_telegram_message(message):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
